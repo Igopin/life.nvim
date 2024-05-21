@@ -44,7 +44,13 @@ M.setup = function(opts)
 	opts = opts or {}
 
 	local win = vim.api.nvim_get_current_win()
-	local buf = vim.api.nvim_win_get_buf(win)
+
+	-- since nvim v0.10 default welcome screen is back,
+	-- so inital buffer is replaced with a new one.
+	local init_buf = vim.api.nvim_win_get_buf(win)
+	local buf = vim.api.nvim_create_buf(true, false)
+	vim.api.nvim_win_set_buf(win, buf)
+	vim.api.nvim_buf_delete(init_buf, { force = true, unload = false })
 
 	local ns = vim.api.nvim_create_namespace("")
 	local extmark = vim.api.nvim_buf_set_extmark(buf, ns, 0, 0, { virt_text_pos = 'overlay' })
